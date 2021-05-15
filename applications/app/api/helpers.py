@@ -4,7 +4,7 @@ from flask import session, jsonify
 def login_required(f):
     @wraps(f)
     def wrapped(*args, **kwargs):
-        if session.get('username', None):
+        if session.get('user_id', None):
             return f(*args, **kwargs)
         else:
             response = jsonify(message = 'Unauthorized user, please re-login to system.', status = 401)

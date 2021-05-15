@@ -12,3 +12,20 @@ body,html {
     border: solid 2px gray;
 
 }
+
+.panel {
+    width: 100%;
+    height: 800px;
+    border: solid 2px rgb(167, 162, 162);
+
+}
+
+.icon-square {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    border-radius: .75rem;
+}

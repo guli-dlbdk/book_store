@@ -1,13 +1,150 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-</head>
-<body>
-	<div id="app">
-		
-	</div>
-	<h2>İndex page</h2>
 
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Login</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+		integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+		crossorigin="anonymous"></script>
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+	<link type="text/css" rel="stylesheet" href="/static/css/login.css" />
+
+	<script type="text/javascript" src="/static/js/requests.js"></script>
+	<script type="text/javascript" src="/static/js/vue.js"></script>
+	
+</head>
+
+<head>
+	<title></title>
+</head>
+
+<body>
+	<div id="login-app">
+		<div class="container" style="max-width: inherit;">
+			<header
+				class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+				<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+					<svg class="bi me-2" width="40" height="32">
+						<use xlink:href="#bootstrap"></use>
+					</svg>
+					<h3 class="fs-4">Bookstore</h3>
+				</a>
+				<div class="col-md-3 text-end justify-content-right ">
+					<button type="button" @click="logoutClick" class="btn btn-outline-primary me-2">Logout</button>
+					<span class="btn btn-outline-info me-2" v-if="currentUser">
+						<a v-bind:href="'/profile?user_id=' + currentUser.id">
+							<span v-text="currentUser.name"></span> (<span v-text="currentUser.role"></span>)
+						</a>
+					</span>
+				</div>
+				
+			</header>
+		</div>
+	</div>
+	<div id="app">
+		<!-- Add Book Modal -->
+		<div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addBookModalLabel">Add Book</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<div class="col-md-12" style="padding-bottom:10px;">
+						<label class="form-label">Book Name</label>
+						<input type="text" class="form-control" v-model="book.name">
+					</div>
+					<div class="col-md-12" style="padding-bottom:10px;">
+						<label class="form-label">Author Name</label>
+						<input type="text" class="form-control" v-model="book.author">
+					</div>
+					<div class="col-md-12" style="padding-bottom:10px;">
+						<label class="form-label">Description</label>
+						<input type="text" class="form-control" v-model="book.description">
+					</div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" @click="addBook">Save</button>
+				  </div>
+				</div>
+			</div>
+		</div>
+
+		<!--Edit Modal -->
+		<div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editBookModalLabel">Add Book</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					</div>
+					<div class="modal-body">
+					<div class="col-md-12" style="padding-bottom:10px;">
+						<label class="form-label">Book Name</label>
+						<input type="text" class="form-control" v-model="selectedBook.name">
+					</div>
+					<div class="col-md-12" style="padding-bottom:10px;">
+						<label class="form-label">Author Name</label>
+						<input type="text" class="form-control" v-model="selectedBook.author">
+					</div>
+					<div class="col-md-12" style="padding-bottom:10px;">
+						<label class="form-label">Description</label>
+						<input type="text" class="form-control" v-model="selectedBook.description">
+					</div>
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" @click="editBook(selectedBook)">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div  v-if="currentUser" class="container px-4 py-0" style="max-width: inherit;">
+			<div  class="row mb-3 mx-5">
+				<form v-on:submit.prevent="searchBooks" class="col">
+					<input v-model="searchText" type="search" class="form-control" placeholder="Search..." aria-label="Search">
+				</form>
+				<button v-if="currentUser.role == 'admin'" class="col-lg-2 col-md-3 col-sm-4 btn btn-success" data-toggle="modal" data-target="#addBookModal">Add Book</button>
+			</div>
+			<div class="row g-4 py-2 row-cols-1 row-cols-lg-3" style="background-color: whitesmoke;">
+			  <!-- book component list -->
+			  <div v-for="book in books" class="col d-flex align-items-start">
+				<book_item :book="book">
+					<div slot="footer">
+						<div class="btn-group">
+							<button v-if="currentUser.role == 'admin' || currentUser.role == 'editor'" type="button" class="btn btn-outline-secondary" 
+							data-toggle="modal" data-target="#editBookModal" @click="selectedBook = book">Edit</button>
+							<button v-if="currentUser.role == 'admin'" type="button" class="btn btn-outline-danger" @click="deleteBook(book)">Delete</button>
+						</div>
+					  </div>
+				</book_item>
+			  </div>
+			</div>
+		</div>
+	</div>
+
+	<script src="/static/js/jquery-2.2.4.js"></script>
+	<script src="/static/js/gui.js"></script>
+	<script src="/static/js/login.js"></script>
 </body>
+
 </html>

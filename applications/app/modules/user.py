@@ -4,10 +4,11 @@ from hashlib import sha512
 
 def create_user(**data):
     try:
-        password = sha512(data['passwd'].encode('utf-8')).hexdigest()
+        # password = sha512(data['passwd'].encode('utf-8')).hexdigest()
+        password=data['passwd']
         sess = Session()
         user = User(name=data['name'], password=password,
-                    active=True)
+                    active=True,role=data['role'])
         sess.add(user)
         sess.commit()
         user_id = user.id
@@ -46,14 +47,15 @@ def get_user(user_id):
 def update_user(user_id, **data):
     try:
         sess = Session()
-        password = sha512(data['password'].encode('utf-8')).hexdigest()
+        print('****', data['role'])
+        # password = sha512(data['password'].encode('utf-8')).hexdigest()
         user = sess.query(User).get(user_id)
         if not user:
             result = False
         else:
-            user.name = data['name']
-            user.passwd = password
-            user.active = data['active']
+            user.role = data['role']
+            # user.passwd = password
+            # user.active = data['active']
             sess.commit()
             result = True
     except Exception as err:
@@ -78,7 +80,8 @@ def delete_user(user_id):
 def authentication(data):
     try:
         sess = Session()
-        password = sha512(data['passwd'].encode('utf-8')).hexdigest()
+        # password = sha512(data['passwd'].encode('utf-8')).hexdigest()
+        password = data['passwd']
         user = sess.query(User).filter(
             User.name == data['name'],
             User.password == password).first()

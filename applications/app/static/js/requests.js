@@ -9,7 +9,7 @@ function request(method, location, headers, data) {
     return response;
 }
 
-
+// ajax alternative
 function async_request(method, location, headers, data, callback) {
   var r = new XMLHttpRequest();
   r.open(method, location);

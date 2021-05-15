@@ -8,8 +8,8 @@ from sqlalchemy import (Column, Integer, String, Boolean,
                         DateTime, text, ForeignKey)
 from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
-from operator import itemgetter
-import datetime
+
+
 
 
 engine = create_engine(DB_URI,  echo=False )
@@ -34,11 +34,24 @@ class User(Table):
     def to_dict(self):
         return {'id': self.id,
                 'name': self.name,
+                'password': self.password,
                 'active': self.active,
                 'role': self.role}
 
 
+class Book(Table):
+    __tablename__ = 'book'
 
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    author = Column(String(100), nullable=False)
+    description = Column(String(255), nullable=True)
+
+    def to_dict(self):
+        return {'id': self.id,
+                'name': self.name,
+                'author': self.author,
+                'description': self.description}
 
 
 
