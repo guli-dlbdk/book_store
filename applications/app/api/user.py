@@ -13,7 +13,6 @@ api = Api(api_bp)
 
 
 class AuthResourceApi(Resource):
-
     def post(self):
         try:
             data = LOGIN_SCHEMA.validate(request.json)

@@ -10,12 +10,3 @@ def login_required(f):
             response = jsonify(message = 'Unauthorized user, please re-login to system.', status = 401)
             return response
     return wrapped
-
-# def login_required(f):
-#     @wraps(f)
-#     def wrapped(*args, **kwargs):
-#         if session.get('user_id', None):
-#             return f(*args, **kwargs)
-#         else:
-#             return abort(401)
-#     return wrapped
