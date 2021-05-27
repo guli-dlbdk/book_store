@@ -15,15 +15,10 @@ var loginapp = new Vue({
   methods: {
     loginOnclick: function () {
       data = JSON.stringify({ name: this.name, passwd: this.passwd });
-      resp = request(
-        "POST",
-        "api/auth",
-        [["Content-Type", "application/json"]],
-        data
-      );
-      resp = JSON.parse(resp);
-      if (resp.status == "OK") {
-        localStorage.currentUser = resp.data[0] && JSON.stringify(resp.data[0]);
+      resp = request("POST", "api/auth", [["Content-Type", "application/json"]], data);
+      result = JSON.parse(resp);
+      if (result.status == "OK") {
+        localStorage.currentUser = result.data[0] && JSON.stringify(result.data[0]);
         setTimeout(function () {
           document.location.href = "/";
         }, 10);
@@ -36,14 +31,9 @@ var loginapp = new Vue({
     },
     saveRegister: function () {
       data = JSON.stringify({ name: this.name, passwd: this.passwd });
-      resp = request(
-        "POST",
-        "api/user",
-        [["Content-Type", "application/json"]],
-        data
-      );
-      resp = JSON.parse(resp);
-      if (resp.status == "OK") {
+      resp = request("POST", "api/user", [["Content-Type", "application/json"]], data);
+      result = JSON.parse(resp);
+      if (result.status == "OK") {
         setTimeout(function () {
           document.location.href = "/login";
         }, 10);
@@ -66,17 +56,14 @@ var loginapp = new Vue({
     getUserFromParams: function () {
       let uri = window.location.search.substring(1); 
       let params = new URLSearchParams(uri);
-      console.log("api/user?id="+params.get("user_id"))
-      result = JSON.parse(request("GET", "api/user?id="+params.get("user_id") , [], null));
+      resp = request("GET", "api/user?id="+params.get("user_id") , [], null);
+      result = JSON.parse(resp);
       return result.data[0]
     },
     changeUserRole: function(userId, role) {
       data = JSON.stringify({ 'role': role})
       console.log('data', userId,role)
-      resp = request(
-        "PUT",
-        "api/user?id="+userId,
-        [["Content-Type", "application/json"]],data);
+      resp = request("PUT", "api/user?id="+userId, [["Content-Type", "application/json"]], data);
       result = JSON.parse(resp);
       if (result.status == "OK") {
         this.profileUser = this.getUserFromParams()

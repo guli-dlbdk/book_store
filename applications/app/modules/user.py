@@ -29,6 +29,7 @@ def get_users():
         result = []
     return result
 
+    
 
 def get_user(user_id):
     try:
@@ -39,7 +40,6 @@ def get_user(user_id):
         else:
             result = [user.to_dict()]
     except Exception as e:
-        print(e)
         result = []
     return result
 

@@ -38,28 +38,41 @@ var app = new Vue({
     },
     selectedBook: '',
     currentUser: null,
+    users: [],
+    message: ''
   },
   mounted: function () {
     if (localStorage.currentUser) {
       this.currentUser = JSON.parse(localStorage.currentUser);
     }
     this.getBook()
+    this.getUser()
   },
   methods: {
     searchBooks: function(){
-      console.log("searching ")
-        async_request("GET", "api/book?text="+this.searchText , [], null, this.bookCallback);
+      async_request("GET", "api/book?text="+this.searchText , [], null, this.bookCallback);
     },
     bookCallback: function (response) {
       result = JSON.parse(response);
       if (result.status == "OK") {
         this.books = result.data
       } else {
-        console.error('Hata')
+        alert('Hata')
       }
     },
     getBook: function() {
       async_request("GET", "api/book" , [], null, this.bookCallback);
+    },
+    userCallback: function (response) {
+      result = JSON.parse(response);
+      if (result.status == "OK") {
+        this.users = result.data
+      } else {
+        alert('Hata')
+      }
+    },
+    getUser: function () {
+      resp = async_request("GET", "api/user", [], null, this.userCallback);
     },
     addBook: function () {
       data = JSON.stringify({ name: this.book.name, author: this.book.author, description: this.book.description });
@@ -68,20 +81,24 @@ var app = new Vue({
       if (result.status == "OK") {
         this.clearData()
         this.getBook()
+      } else {
+        alert(result.message)
       }
     },
     deleteBook: function(item){
       res = request("DELETE", "api/book?id=" + item.id, [['Content-Type', 'application/json']], null);
-      res = JSON.parse(res)
-      if (res.status == 'OK') {
+      result = JSON.parse(res)
+      if (result.status == 'OK') {
         this.getBook()
+      } else {
+        alert(result.message)
       }
     },
     editBook: function(item){
       params = JSON.stringify({ name: this.selectedBook.name, author: this.selectedBook.author, description: this.selectedBook.description });
       res = request("PUT", "api/book?id=" + item.id, [['Content-Type', 'application/json']], params);
-      res = JSON.parse(res)
-      if (res.status == 'OK') {
+      result = JSON.parse(res)
+      if (result.status == 'OK') {
         this.getBook()
       }
     },

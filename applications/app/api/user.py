@@ -43,7 +43,7 @@ class AuthResourceApi(Resource):
 
 
 class UserResourceApi(Resource):
-
+    # @login_required
     def get(self):
         # baskaisin profinolini goruntuleme sadece admin yetksininde, urlden alindigi icin baskasi kolayca yazip gorebilir
         # user_id = session.get('user_id', None)
@@ -67,7 +67,7 @@ class UserResourceApi(Resource):
             return {'status': 'ERROR',
                     'data': []}
 
-
+    # @login_required
     def post(self):
         try:
             data = USER_SCHEMA.validate(request.json)
@@ -88,13 +88,11 @@ class UserResourceApi(Resource):
     # @login_required
     def put(self):
         user_id = request.args.get('id', None)
-        print('xxxxxxxxx user_id',user_id)
         if not user_id:
             return {'status': 'ERROR',
                     'message': '\'id\' parametresi girilmeli'}
         try:
             data = UPDATE_SCHEMA.validate(request.json)
-            print('xxxxxxxxx',data)
         except SchemaError as e:
             return {'status': 'ERROR',
                     'message': e.code}

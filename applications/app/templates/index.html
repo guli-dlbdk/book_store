@@ -43,7 +43,12 @@
 				</a>
 				<div class="col-md-3 text-end justify-content-right ">
 					<button type="button" @click="logoutClick" class="btn btn-outline-primary me-2">Logout</button>
-					<span class="btn btn-outline-info me-2" v-if="currentUser">
+					<span v-show="currentUser.role !='admin'" class="btn btn-outline-info me-2" v-if="currentUser">
+						<a v-bind:href="'/profile?user_id=' + currentUser.id">
+							<span v-text="currentUser.name"></span> (<span v-text="currentUser.role"></span>)
+						</a>
+					</span>
+					<span v-show="currentUser.role =='admin'" class="btn btn-outline-info me-2" v-if="currentUser">
 						<a v-bind:href="'/profile?user_id=' + currentUser.id">
 							<span v-text="currentUser.name"></span> (<span v-text="currentUser.role"></span>)
 						</a>

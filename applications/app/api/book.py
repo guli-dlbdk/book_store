@@ -14,7 +14,7 @@ api = Api(api_bp)
 
 
 class BookResourceApi(Resource):
-    @login_required
+    #@login_required
     def get(self):
         text = request.args.get('text', None)
         try:
@@ -28,7 +28,7 @@ class BookResourceApi(Resource):
         except Exception as e:
             return {'status': 'ERROR',
                     'data': []}
-
+    #@login_required
     def post(self):
         # todo: tum apilere yapilmalidir.
         # arayuzdeki role yukseltmesini onlemek icin arkaplanda her zaman kontrol etmek lazim.
@@ -79,7 +79,7 @@ class BookResourceApi(Resource):
             return {'status': 'ERROR'}
 
 
-    @login_required
+    #@login_required
     def delete(self):
         # arayuzdeki role yukseltmesini onlemek icin arkaplanda her zaman kontrol etmek lazim.
         # user_id = session.get('user_id', None)

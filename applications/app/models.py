@@ -6,13 +6,14 @@ from config import DB_URI
 from sqlalchemy import create_engine
 from sqlalchemy import (Column, Integer, String, Boolean,
                         DateTime, text, ForeignKey)
+from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 
 
 
-engine = create_engine(DB_URI,  echo=False )
+engine = create_engine(DB_URI, echo=False)
 Session = sessionmaker(bind=engine)
 Table = declarative_base()
 Table.metadata.bind = engine
